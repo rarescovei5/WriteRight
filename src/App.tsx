@@ -1,21 +1,21 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Home from './pages/Home';
-import Workspace from './pages/Workspace';
+import WorkspaceLayout from './pages/WorkspaceLayout';
 import Editor from './features/text_editor/Editor';
+import NoEditor from './features/text_editor/NoEditor';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/workspace" element={<Workspace />}>
-            <Route path="/:fileName" element={<Editor />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/workspace" element={<WorkspaceLayout />}>
+          <Route index element={<NoEditor />} />
+          <Route path=":fileName" element={<Editor />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-const Workspace = () => {
+const WorkspaceLayout = () => {
   return (
     <>
       <Outlet />
@@ -8,4 +8,4 @@ const Workspace = () => {
   );
 };
 
-export default Workspace;
+export default WorkspaceLayout;
