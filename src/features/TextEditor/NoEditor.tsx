@@ -1,5 +1,5 @@
 const NoEditor = () => {
-  return;
+  return <></>;
 };
 
 export default NoEditor;

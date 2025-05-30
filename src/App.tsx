@@ -2,8 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Home from './pages/Home';
 import WorkspaceLayout from './pages/WorkspaceLayout';
-import Editor from './features/text_editor/Editor';
-import NoEditor from './features/text_editor/NoEditor';
+import Editor from './features/TextEditor/Editor';
+import NoEditor from './features/TextEditor/NoEditor';
 
 function App() {
   return (

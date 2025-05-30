@@ -7,8 +7,8 @@ const appWindow = getCurrentWindow();
 
 const Titlebar = () => {
   return (
-    <div data-tauri-drag-region className="h-10 flex">
-      <div className="flex-1 border-b border-border"></div>
+    <div className="h-10 flex">
+      <div data-tauri-drag-region className="flex-1 border-b border-border"></div>
       <div className="inline-flex border-b border-border">
         <TooltipProvider>
           <Tooltip delayDuration={300}>
