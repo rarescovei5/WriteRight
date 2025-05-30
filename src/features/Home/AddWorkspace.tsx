@@ -4,16 +4,25 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Plus } from 'lucide-react';
 
-const AddWorkspace = (props: any) => {
+import { useAppDispatch } from '@/app/hooks/hooks';
+import { updateWorkspaces } from '@/app/workspaces/workspacesSlice';
+
+const AddWorkspace = () => {
+  const dispatch = useAppDispatch();
+
   const handleClick = async () => {
-    const file = await open({
+    // Open file explorer
+    const folderPath = await open({
       directory: true,
     });
 
-    console.log(file);
+    // If user closes the popup just return
+    if (!folderPath) return;
 
-    props.setFile(file);
+    // Else, add the folder to opened folders
+    dispatch(updateWorkspaces({ updateKind: 'add', path: folderPath }));
   };
+
   return (
     <TooltipProvider>
       <Tooltip delayDuration={300}>
