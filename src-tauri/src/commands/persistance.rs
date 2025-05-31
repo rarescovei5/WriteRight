@@ -5,7 +5,7 @@ use std::{fs};
 
 // Save Data
 #[tauri::command]
-pub fn save_opened_folders(app_handle: tauri::AppHandle, folders: Vec<String>) -> Result<(), String> {
+pub fn save_workspaces(app_handle: tauri::AppHandle, folders: Vec<String>) -> Result<(), String> {
     // Resolve the AppData/Roaming/WriteRight directory
     let mut app_data_dir = match app_handle.path().app_data_dir() {
         Ok(path) => path,
@@ -18,7 +18,7 @@ pub fn save_opened_folders(app_handle: tauri::AppHandle, folders: Vec<String>) -
         .map_err(|e| format!("Could not create directory {:?}: {}", app_data_dir, e))?;
 
     // Prepare file path
-    let file_path = app_data_dir.join("opened_folders.json");
+    let file_path = app_data_dir.join("workspaces.json");
 
     // Serialize folder list to pretty JSON
     let json = match serde_json::to_string_pretty(&folders) {
@@ -29,7 +29,7 @@ pub fn save_opened_folders(app_handle: tauri::AppHandle, folders: Vec<String>) -
      // Write JSON to file
     match fs::write(&file_path, json) {
         Ok(_) => {
-            println!("Saved opened folders to {:?}", file_path);
+            println!("Saved workspaces to {:?}", file_path);
             Ok(())
         }
         Err(e) => Err(format!("Failed to write file {:?}: {}", file_path, e)),
@@ -39,13 +39,13 @@ pub fn save_opened_folders(app_handle: tauri::AppHandle, folders: Vec<String>) -
 
 // Load Data
 #[tauri::command]
-pub fn load_opened_folders(app_handle: tauri::AppHandle) -> Result<Vec<String>, String> {
+pub fn load_workspaces(app_handle: tauri::AppHandle) -> Result<Vec<String>, String> {
     let mut app_data_dir = match app_handle.path().app_data_dir() {
         Ok(path) => path,
         Err(e) => return Err(format!("Failed to get app data dir: {}", e)),
     };
     app_data_dir.push("WriteRight");
-    let file_path = app_data_dir.join("opened_folders.json");
+    let file_path = app_data_dir.join("workspaces.json");
 
     // If file doesn't exist yet, return empty list
     if !file_path.exists() {
@@ -60,7 +60,10 @@ pub fn load_opened_folders(app_handle: tauri::AppHandle) -> Result<Vec<String>, 
 
     // Deserialize JSON to Vec<String>
     match serde_json::from_str(&raw) {
-        Ok(list) => Ok(list),
+        Ok(list) => {
+            println!("Loaded workspaces from {:?}", file_path);
+            Ok(list)
+        },
         Err(e) => Err(format!("Deserialization error: {}", e)),
     }
 }

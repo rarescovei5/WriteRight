@@ -1,13 +1,18 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { Minus, Square, X } from 'lucide-react';
+import { Home, Minus, Square, X } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Link } from 'react-router-dom';
 
 const appWindow = getCurrentWindow();
 
 const Titlebar = () => {
   return (
     <div className="h-10 flex">
+      <Link to="/" className="grid place-content-center border-b border-border px-2 border-l border-l-transparent">
+        <Home width={24} strokeWidth={1} />
+      </Link>
+
       <div data-tauri-drag-region className="flex-1 border-b border-border"></div>
       <div className="inline-flex border-b border-border">
         <TooltipProvider>

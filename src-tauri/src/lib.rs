@@ -23,8 +23,8 @@ pub fn run() {
                 filesystem::get_folder_hierarchy,
 
                 // Persistance
-                persistance::save_opened_folders,
-                persistance::load_opened_folders])
+                persistance::save_workspaces,
+                persistance::load_workspaces])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

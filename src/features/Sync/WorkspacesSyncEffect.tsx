@@ -13,7 +13,7 @@ export default function WorkspaceSyncEffect() {
     console.log('Trying to save');
     // Debounce
     const timeout = setTimeout(() => {
-      invoke('save_opened_folders', { folders: folders })
+      invoke('save_workspaces', { folders: folders })
         .then(() => console.log('Workspaces saved!'))
         .catch((err) => console.error('Failed to save workspaces:', err));
     }, 500);

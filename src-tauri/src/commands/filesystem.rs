@@ -52,5 +52,6 @@ fn build_tree(path: &path::Path) -> Result<FileNode, String> {
 #[tauri::command]
 pub fn get_folder_hierarchy(folder_path: String) -> Result<FileNode, String> {
     let path = path::PathBuf::from(folder_path);
+    println!("Built tree for {:?}", path);
     build_tree(&path)
 }
