@@ -62,9 +62,7 @@ const Home = () => {
           <h1 className="font-bold text-2xl p-4">Workspaces</h1>
           <div
             style={{
-              gridTemplateColumns: `repeat(auto-fit,minmax(200px,${
-                folders.length >= 4 || window.innerWidth < 864 ? '1fr' : '250px'
-              }))`,
+              gridTemplateColumns: `repeat(auto-fill,minmax(200px,1fr))`,
               gridAutoRows: '350px',
             }}
             className="grid gap-4 flex-1 scrollbar-hidden !overflow-y-auto p-4"
