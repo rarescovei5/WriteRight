@@ -41,13 +41,13 @@ const TreeNode = ({
   const paddingLeft = `${level}px`;
 
   const dispatch = useAppDispatch();
-  const { openedFilesPaths, selectedFilePath } = useAppSelector((state) => state.workspaces.currentWorkspace);
+  const { selectedFilePath } = useAppSelector((state) => state.workspaces.currentWorkspace);
 
   const handleOpen = (path: string) => {
-    if (!openedFilesPaths.includes(path)) {
+    console.log(path);
+    if (selectedFilePath !== item.path) {
       dispatch(openFile({ path }));
     } else {
-      dispatch(openFile({ path }));
       dispatch(updateOpenedFiles({ updateKind: 'add', path }));
     }
   };

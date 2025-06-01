@@ -113,8 +113,8 @@ const workspaceSlice = createSlice({
 
       switch (updateKind) {
         case 'add':
-          if (state.currentWorkspace.openedFilesPaths.includes(path)) return;
-          state.currentWorkspace.openedFilesPaths.push(path);
+          if (!state.currentWorkspace.openedFilesPaths.includes(path))
+            state.currentWorkspace.openedFilesPaths.push(path);
           break;
         case 'remove':
           state.currentWorkspace.openedFilesPaths = state.currentWorkspace.openedFilesPaths.filter(
