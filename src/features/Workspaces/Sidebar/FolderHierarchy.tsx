@@ -1,7 +1,8 @@
-import type { WorkspaceTree } from '@/app/workspaces/workspacesSlice';
+import { openFile, updateOpenedFiles, type WorkspaceTree } from '@/app/workspaces/workspacesSlice';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import clsx from 'clsx';
+
+import { useAppDispatch, useAppSelector } from '@/app/hooks/hooks';
 
 const FolderHierarchy = ({
   tree,
@@ -39,6 +40,18 @@ const TreeNode = ({
   const [open, setOpen] = useState(true);
   const paddingLeft = `${level}px`;
 
+  const dispatch = useAppDispatch();
+  const { openedFilesPaths, selectedFilePath } = useAppSelector((state) => state.workspaces.currentWorkspace);
+
+  const handleOpen = (path: string) => {
+    if (!openedFilesPaths.includes(path)) {
+      dispatch(openFile({ path }));
+    } else {
+      dispatch(openFile({ path }));
+      dispatch(updateOpenedFiles({ updateKind: 'add', path }));
+    }
+  };
+
   if (item.is_dir) {
     return (
       <div className="flex flex-col">
@@ -61,11 +74,11 @@ const TreeNode = ({
 
   return (
     <div
-      className={clsx(
-        'px-2 py-2 cursor-pointer hover:bg-muted text-sm text-secondary-foreground transition-all duration-100',
+      className={`px-2 py-2 cursor-pointer text-sm text-secondary-foreground transition-all duration-100 ${
         showPreviews && 'flex flex-col'
-      )}
+      } ${selectedFilePath === item.path ? 'bg-muted' : 'hover:bg-muted'}`}
       style={{ paddingLeft }}
+      onClick={() => handleOpen(item.path)}
     >
       <span>{item.name}</span>
       {showPreviews && (

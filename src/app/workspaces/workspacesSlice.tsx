@@ -13,6 +13,7 @@ type WorkspaceState = {
   folders: Array<string>;
   loaded: boolean;
   currentWorkspace: {
+    loaded: boolean;
     openedFilesPaths: Array<string>;
     selectedFilePath: string;
     workspaceTree: WorkspaceTree;
@@ -29,6 +30,7 @@ const initialState: WorkspaceState = {
   folders: [],
   loaded: false,
   currentWorkspace: {
+    loaded: false,
     openedFilesPaths: [],
     selectedFilePath: '',
     workspaceTree: {} as WorkspaceTree,
@@ -41,8 +43,8 @@ const isDev = process.env.NODE_ENV === 'development';
 export const loadWorkspacesPaths = createAsyncThunk('workspaces/loadWorkspacesPaths', async () => {
   return await invoke<WorkspaceState['folders']>('load_workspaces');
 });
-export const loadWorkspace = createAsyncThunk('workspace/treeLoad', async (workspacePath: string) => {
-  const workspacesInfo: WorkspacesInfo = JSON.parse(localStorage.getItem('workspace')!) || {};
+export const loadWorkspace = createAsyncThunk('workspaces/workspaceLoad', async (workspacePath: string) => {
+  const workspacesInfo: WorkspacesInfo = JSON.parse(localStorage.getItem('workspacesInfo')!) || {};
 
   if (!workspacesInfo[workspacePath]) {
     workspacesInfo[workspacePath] = {
@@ -55,7 +57,6 @@ export const loadWorkspace = createAsyncThunk('workspace/treeLoad', async (works
   const workspaceTree = await invoke<WorkspaceTree>('get_folder_hierarchy', { folderPath: workspacePath });
 
   return {
-    workspacePath,
     openedFilesPaths,
     selectedFilePath,
     workspaceTree,
@@ -107,14 +108,37 @@ const workspaceSlice = createSlice({
           break;
       }
     },
+    updateOpenedFiles(state, action: PayloadAction<{ updateKind: 'add' | 'remove'; path: string }>) {
+      const { updateKind, path } = action.payload;
+
+      switch (updateKind) {
+        case 'add':
+          if (state.currentWorkspace.openedFilesPaths.includes(path)) return;
+          state.currentWorkspace.openedFilesPaths.push(path);
+          break;
+        case 'remove':
+          state.currentWorkspace.openedFilesPaths = state.currentWorkspace.openedFilesPaths.filter(
+            (existingPaths) => existingPaths !== path
+          );
+          break;
+      }
+    },
+    openFile(state, action: PayloadAction<{ path: string }>) {
+      state.currentWorkspace.selectedFilePath = action.payload.path;
+    },
+
     prepareWorkspaceClose(state, action: PayloadAction<{ workspacePath: string }>) {
       const { workspacePath } = action.payload;
 
       const workspacesInfo: WorkspacesInfo = JSON.parse(localStorage.getItem('workspacesInfo')!) || {};
 
-      workspacesInfo[workspacePath] = state.currentWorkspace;
+      const { openedFilesPaths, selectedFilePath } = state.currentWorkspace;
+
+      workspacesInfo[workspacePath] = { openedFilesPaths, selectedFilePath };
 
       localStorage.setItem('workspacesInfo', JSON.stringify(workspacesInfo));
+
+      state.currentWorkspace.loaded = false;
     },
   },
   extraReducers: (builder) => {
@@ -125,8 +149,9 @@ const workspaceSlice = createSlice({
     });
     builder.addCase(loadWorkspace.fulfilled, (state, action) => {
       const { openedFilesPaths, selectedFilePath, workspaceTree } = action.payload;
-      isDev && console.log(`Loaded workspace: ${action.payload.workspacePath}`, action.payload);
+      isDev && console.log(`Loaded workspace`, action.payload);
       state.currentWorkspace = {
+        loaded: true,
         openedFilesPaths,
         selectedFilePath,
         workspaceTree,
@@ -135,5 +160,13 @@ const workspaceSlice = createSlice({
   },
 });
 
-export const { updateWorkspaces, prepareWorkspaceClose } = workspaceSlice.actions;
+export const {
+  // App
+  updateWorkspaces, // Update Workspaces shown on Home screen
+
+  // Workspace
+  updateOpenedFiles, // Add / Remove from opened file tabs
+  openFile, // The current displayed file in the editor
+  prepareWorkspaceClose, // Save things for UX
+} = workspaceSlice.actions;
 export default workspaceSlice.reducer;

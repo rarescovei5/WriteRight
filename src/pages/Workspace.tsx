@@ -9,10 +9,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Blocks, File, Search } from 'lucide-react';
 import React from 'react';
 import { prepareWorkspaceClose, loadWorkspace } from '@/app/workspaces/workspacesSlice';
-import { useAppDispatch } from '@/app/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks/hooks';
 
 const Workspace = () => {
   const dispatch = useAppDispatch();
+  const isWorkspaceLoaded = useAppSelector((state) => state.workspaces.currentWorkspace.loaded);
+
   const { workspacePath } = useParams();
 
   // For Sidebar Item Highlighting
@@ -25,7 +27,8 @@ const Workspace = () => {
     if (!workspacePath) return;
     dispatch(loadWorkspace(workspacePath));
     return () => {
-      prepareWorkspaceClose({ workspacePath });
+      console.log(isWorkspaceLoaded);
+      isWorkspaceLoaded && dispatch(prepareWorkspaceClose({ workspacePath }));
     };
   }, [dispatch]);
 
