@@ -8,14 +8,9 @@ export default function WorkspaceSyncEffect() {
   useEffect(() => {
     if (!loaded) return;
 
-    console.log('Loaded');
-
-    console.log('Trying to save');
     // Debounce
     const timeout = setTimeout(() => {
-      invoke('save_workspaces', { folders: folders })
-        .then(() => console.log('Workspaces saved!'))
-        .catch((err) => console.error('Failed to save workspaces:', err));
+      invoke('save_workspaces', { folders: folders }).catch((err) => console.error('Failed to save workspaces:', err));
     }, 500);
 
     return () => clearTimeout(timeout);

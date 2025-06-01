@@ -1,5 +1,5 @@
-import Titlebar from '@/features/Titlebar/Titlebar';
-import AddWorkspace from '@/features/Home/AddWorkspace';
+import Titlebar from '@/components/layout/Titlebar';
+import AddWorkspace from '@/components/functionality/AddWorkspace';
 
 import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useAppDispatch, useAppSelector } from '@/app/hooks/hooks';
@@ -8,7 +8,7 @@ import { updateWorkspaces } from '@/app/workspaces/workspacesSlice';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 
-function getFolderName(path: string) {
+export function getFolderName(path: string) {
   return path.substring(path.lastIndexOf('\\') + 1);
 }
 
@@ -82,7 +82,7 @@ const Home = () => {
                     size="icon"
                     onClick={() => dispatch(updateWorkspaces({ updateKind: 'remove', path: folder }))}
                   >
-                    <X width={16} />
+                    <X size={16} />
                   </Button>
                 </div>
               </div>

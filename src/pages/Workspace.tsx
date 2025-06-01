@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 
-import Editor from '@/features/TextEditor/Editor';
-import Titlebar from '@/features/Titlebar/Titlebar';
+import Editor from '@/features/Workspaces/TextEditor/Editor';
+import Titlebar from '@/components/layout/Titlebar';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -32,7 +32,7 @@ const Workspace = () => {
   return (
     <div className="h-svh flex flex-col">
       <Titlebar />
-      <div className="flex-1 flex flex-row">
+      <div className="flex flex-row flex-1 min-h-0">
         <aside className="border-r border-border flex flex-col h-full items-center justify-start">
           <TooltipProvider>
             <Tooltip delayDuration={300}>
@@ -41,7 +41,7 @@ const Workspace = () => {
                   className={`px-2 py-3 border-l ${isFiles ? 'border-primary' : 'border-transparent'}`}
                   to={`/workspaces/${encodeURIComponent(workspacePath!)}/files`}
                 >
-                  <File width={24} strokeWidth={1} />
+                  <File size={24} strokeWidth={1} />
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Files</TooltipContent>
@@ -52,7 +52,7 @@ const Workspace = () => {
                   className={`px-2 py-3 border-l ${isSearch ? 'border-primary' : 'border-transparent'}`}
                   to={`/workspaces/${encodeURIComponent(workspacePath!)}/search`}
                 >
-                  <Search width={24} strokeWidth={1} />
+                  <Search size={24} strokeWidth={1} />
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Search (Coming Soon)</TooltipContent>
@@ -63,20 +63,16 @@ const Workspace = () => {
                   className={`px-2 py-3 border-l ${isExtensions ? 'border-primary' : 'border-transparent'}`}
                   to={`/workspaces/${encodeURIComponent(workspacePath!)}/extensions`}
                 >
-                  <Blocks width={24} strokeWidth={1} />
+                  <Blocks size={24} strokeWidth={1} />
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Extensions (Coming Soon)</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </aside>
-        <ResizablePanelGroup className="flex-1" direction="horizontal" autoSaveId={'Home-ResizeablePanelGroup'}>
+        <ResizablePanelGroup className="flex-1" direction="horizontal">
           {/* Left Webview */}
-          <ResizablePanel
-            className="flex flex-col !overflow-y-auto scrollbar-hidden flex-1"
-            defaultSize={20}
-            maxSize={80}
-          >
+          <ResizablePanel className="flex flex-col" defaultSize={20} maxSize={80}>
             <Outlet />
           </ResizablePanel>
           <ResizableHandle />

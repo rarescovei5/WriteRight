@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { invoke } from '@tauri-apps/api/core';
 
-type WorkspaceTree = {
+export type WorkspaceTree = {
   name: string;
   path: string;
   is_dir: boolean;
@@ -93,7 +93,6 @@ const workspaceSlice = createSlice({
           // Replace all child paths with this broader one
           if (childIndexes.length > 0) {
             // Remove all children
-            console.log(state.folders);
             state.folders = state.folders.filter((_, i) => !childIndexes.includes(i));
             state.folders.push(path);
             break;
