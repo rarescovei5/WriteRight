@@ -12,7 +12,7 @@ const TabList = () => {
 
   return (
     <div className="flex flex-row min-h-6">
-      {openedFilesPaths.map((filePath) => (
+      {openedFilesPaths.map((filePath, idx) => (
         <div
           className={`${
             selectedFilePath === filePath ? 'border-t-foreground border-b-transparent' : 'border-b-border'
@@ -25,8 +25,13 @@ const TabList = () => {
             className="p-1 hidden group-hover:flex justify-center items-center hover:bg-muted rounded-md absolute right-1 top-1/2 -translate-y-1/2"
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(openFile({ path: openedFilesPaths[openedFilesPaths.length - 1] ?? '' }));
+              const isCurrentTab = selectedFilePath === filePath;
               dispatch(updateOpenedFiles({ updateKind: 'remove', path: filePath }));
+
+              if (isCurrentTab) {
+                const nextFilePath = openedFilesPaths[idx + 1] ?? openedFilesPaths[idx - 1] ?? '';
+                dispatch(openFile({ path: nextFilePath }));
+              }
             }}
           >
             <X size={12} />
@@ -44,8 +49,10 @@ const TabList = () => {
             className="p-1 hidden group-hover:flex justify-center items-center hover:bg-muted rounded-md absolute right-1 top-1/2 -translate-y-1/2"
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(openFile({ path: openedFilesPaths[openedFilesPaths.length - 1] ?? '' }));
-              dispatch(updateOpenedFiles({ updateKind: 'remove', path: selectedFilePath }));
+
+              const nextFilePath =
+                openedFilesPaths[openedFilesPaths.length - 1] ?? openedFilesPaths[openedFilesPaths.length - 1] ?? '';
+              dispatch(openFile({ path: nextFilePath }));
             }}
           >
             <X size={12} />

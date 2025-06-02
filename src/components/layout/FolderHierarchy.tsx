@@ -44,7 +44,6 @@ const TreeNode = ({
   const { selectedFilePath } = useAppSelector((state) => state.workspaces.currentWorkspace);
 
   const handleOpen = (path: string) => {
-    console.log(path);
     if (selectedFilePath !== item.path) {
       dispatch(openFile({ path }));
     } else {
