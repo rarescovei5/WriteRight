@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 
-import Editor from '@/features/Workspaces/TextEditor/Editor';
+import ContentWebview from '@/features/Workspaces/Content/ContentWebview';
 import Titlebar from '@/components/layout/Titlebar';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
@@ -75,13 +75,13 @@ const Workspace = () => {
         </aside>
         <ResizablePanelGroup className="flex-1" direction="horizontal">
           {/* Left Webview */}
-          <ResizablePanel className="flex flex-col" defaultSize={20} maxSize={80}>
+          <ResizablePanel className="flex flex-col relative" defaultSize={20} maxSize={80}>
             <Outlet />
           </ResizablePanel>
           <ResizableHandle />
           {/* Content Webview */}
           <ResizablePanel className="flex flex-col relative">
-            <Editor />
+            <ContentWebview />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

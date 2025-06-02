@@ -1,7 +1,9 @@
 use serde::Serialize;
-use std::fs;
-use std::path;
+use std::{fs, fs::{File}};
+use std::io::{self, Read, Write};
+use std::{path, path::Path};
 
+// Used for the explorer hierarchy
 #[derive(Serialize)]
 pub struct FileNode {
     name: String,
@@ -54,4 +56,41 @@ pub fn get_folder_hierarchy(folder_path: String) -> Result<FileNode, String> {
     let path = path::PathBuf::from(folder_path);
     println!("Built tree for {:?}", path);
     build_tree(&path)
+}
+
+// Used for interacting with the current file
+#[tauri::command]
+pub fn read_file(file_path: String) -> Result<String, String> {
+    let mut file = File::open(file_path).map_err(|e| e.to_string())?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).map_err(|e| e.to_string())?;
+    Ok(contents)
+}
+
+#[tauri::command]
+pub fn save_file(file_path: String) -> Result<(), String> {
+    let mut file = File::create(file_path).map_err(|e| e.to_string())?;
+    file.write_all(b"").map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn create_file(folder_path: String, file_name: String) -> Result<(), String> {
+    let full_path = Path::new(&folder_path).join(&file_name);
+    if full_path.exists() {
+        return Err(format!("File already exists: {}", full_path.display()));
+    }
+
+    match File::create(&full_path) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(format!("Failed to create file: {}", e)),
+    }
+}
+
+#[tauri::command]
+pub fn delete_file(file_path: String) -> Result<(), String> {
+    match fs::remove_file(&file_path) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(format!("Failed to delete file: {}", e)),
+    }
 }

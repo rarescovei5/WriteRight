@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/app/hooks/hooks';
 import { getFolderName } from '@/pages/Home';
 import { useParams } from 'react-router-dom';
-import FolderHierarchy from './FolderHierarchy';
+import FolderHierarchy from '../../../components/layout/FolderHierarchy';
 
 const FilesSidebar = () => {
   const { workspacePath } = useParams();
