@@ -29,7 +29,7 @@ pub fn save_workspaces(app_handle: tauri::AppHandle, folders: Vec<String>) -> Re
      // Write JSON to file
     match fs::write(&file_path, json) {
         Ok(_) => {
-            println!("Saved workspaces to {:?}", file_path);
+            println!("[DEBUG: RUST] Saved workspaces to {:?}", file_path);
             Ok(())
         }
         Err(e) => Err(format!("Failed to write file {:?}: {}", file_path, e)),
@@ -61,7 +61,7 @@ pub fn load_workspaces(app_handle: tauri::AppHandle) -> Result<Vec<String>, Stri
     // Deserialize JSON to Vec<String>
     match serde_json::from_str(&raw) {
         Ok(list) => {
-            println!("Loaded workspaces from {:?}", file_path);
+            println!("[DEBUG: RUST] Loaded workspaces from {:?}", file_path);
             Ok(list)
         },
         Err(e) => Err(format!("Deserialization error: {}", e)),

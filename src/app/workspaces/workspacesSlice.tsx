@@ -37,8 +37,6 @@ const initialState: WorkspaceState = {
   },
 };
 
-const isDev = process.env.NODE_ENV === 'development';
-
 // async thunks
 export const loadWorkspacesPaths = createAsyncThunk('workspaces/loadWorkspacesPaths', async () => {
   return await invoke<WorkspaceState['folders']>('load_workspaces');
@@ -144,12 +142,12 @@ const workspaceSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loadWorkspacesPaths.fulfilled, (state, action) => {
       state.folders = action.payload;
-      isDev && console.log(`Loaded workspaces paths:`, action.payload);
+
       state.loaded = true;
     });
     builder.addCase(loadWorkspace.fulfilled, (state, action) => {
       const { openedFilesPaths, selectedFilePath, workspaceTree } = action.payload;
-      isDev && console.log(`Loaded workspace`, action.payload);
+
       state.currentWorkspace = {
         loaded: true,
         openedFilesPaths,

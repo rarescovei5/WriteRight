@@ -16,9 +16,7 @@ const Editor = () => {
     invoke<string>('read_file', { filePath: selectedFilePath }).then((fileContents) => setText(fileContents));
   }, [selectedFilePath]);
 
-  React.useEffect(() => {
-    console.log(text);
-  }, [text]);
+  React.useEffect(() => {}, [text]);
 
   if (selectedFilePath === '') {
     return (

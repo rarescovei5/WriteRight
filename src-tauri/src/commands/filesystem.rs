@@ -54,7 +54,7 @@ fn build_tree(path: &path::Path) -> Result<FileNode, String> {
 #[tauri::command]
 pub fn get_folder_hierarchy(folder_path: String) -> Result<FileNode, String> {
     let path = path::PathBuf::from(folder_path);
-    println!("[DEBUG] Built tree for {:?}", path);
+    println!("[DEBUG: RUST] Built tree for {:?}", path);
     build_tree(&path)
 }
 
@@ -64,7 +64,7 @@ pub fn read_file(file_path: String) -> Result<String, String> {
     let mut file = File::open(file_path).map_err(|e| e.to_string())?;
     let mut contents = String::new();
     file.read_to_string(&mut contents).map_err(|e| e.to_string())?;
-    println!("[DEBUG] Successfully read {} bytes", contents.len());
+    println!("[DEBUG: RUST] Successfully read {} bytes", contents.len());
     Ok(contents)
 }
 
@@ -72,7 +72,7 @@ pub fn read_file(file_path: String) -> Result<String, String> {
 pub fn save_file(file_path: String) -> Result<(), String> {
     let mut file = File::create(&file_path).map_err(|e| e.to_string())?;
     file.write_all(b"").map_err(|e| e.to_string())?;
-    println!("[DEBUG] File \"{}\" saved successfully", file_path);
+    println!("[DEBUG: RUST] \"{}\" saved successfully", file_path);
     Ok(())
 }
 
@@ -85,7 +85,7 @@ pub fn create_file(folder_path: String, file_name: String) -> Result<(), String>
 
     match File::create(&full_path) {
         Ok(_) => {
-            println!("[DEBUG] File \"{}\" created successfully", file_name);
+            println!("[DEBUG: RUST] \"{}\" created successfully", file_name);
             Ok(())
         },
         Err(e) => Err(format!("Failed to create file: {}", e)),
@@ -96,7 +96,7 @@ pub fn create_file(folder_path: String, file_name: String) -> Result<(), String>
 pub fn delete_file(file_path: String) -> Result<(), String> {
     match fs::remove_file(&file_path) {
         Ok(_) =>{ 
-            println!("[DEBUG] File \"{}\" deleted successfully", file_path);
+            println!("[DEBUG: RUST] File \"{}\" deleted successfully", file_path);
             Ok(())
         },
         Err(e) => Err(format!("Failed to delete file: {}", e)),

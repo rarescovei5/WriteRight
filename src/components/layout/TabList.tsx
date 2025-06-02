@@ -24,7 +24,9 @@ const TabList = () => {
           >
             <span className="">{getFolderName(filePath)}</span>
             <button
-              className="p-1 hidden group-hover:flex justify-center items-center hover:bg-muted rounded-md absolute right-1 top-1/2 -translate-y-1/2"
+              className={`p-1 ${
+                selectedFilePath === filePath ? 'flex' : 'hidden group-hover:flex opacity-50'
+              } justify-center items-center hover:bg-muted rounded-md absolute right-1 top-1/2 -translate-y-1/2`}
               onClick={(e) => {
                 e.stopPropagation();
                 const isCurrentTab = selectedFilePath === filePath;
@@ -46,7 +48,7 @@ const TabList = () => {
           >
             <span className="pr-5">{getFolderName(selectedFilePath)}</span>
             <button
-              className="p-1 hidden group-hover:flex justify-center items-center hover:bg-muted rounded-md absolute right-1 top-1/2 -translate-y-1/2"
+              className={`p-1 flex justify-center items-center hover:bg-muted rounded-md absolute right-1 top-1/2 -translate-y-1/2`}
               onClick={(e) => {
                 e.stopPropagation();
                 const nextFilePath =

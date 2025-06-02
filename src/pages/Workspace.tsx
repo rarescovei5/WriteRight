@@ -27,7 +27,6 @@ const Workspace = () => {
     if (!workspacePath) return;
     dispatch(loadWorkspace(workspacePath));
     return () => {
-      console.log(isWorkspaceLoaded);
       isWorkspaceLoaded && dispatch(prepareWorkspaceClose({ workspacePath }));
     };
   }, [dispatch]);
