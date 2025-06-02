@@ -1,8 +1,18 @@
+import React from 'react';
 import { useAppSelector } from '@/app/hooks/hooks';
 import { FileText } from 'lucide-react';
+import { invoke } from '@tauri-apps/api/core';
+
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const Editor = () => {
   const { selectedFilePath } = useAppSelector((state) => state.workspaces.currentWorkspace);
+  const [text, setText] = React.useState<string>('');
+
+  React.useEffect(() => {
+    if (selectedFilePath === '') return;
+    invoke<string>('read_file', { filePath: selectedFilePath }).then((fileContents) => setText(fileContents));
+  }, [selectedFilePath]);
 
   if (selectedFilePath === '') {
     return (
@@ -16,7 +26,21 @@ const Editor = () => {
     );
   }
 
-  return <div className="px-20 flex-1"></div>;
+  return (
+    <div className="flex flex-col flex-1 min-h-0">
+      {/* Word like Header for editing  */}
+      {/* Actual Markdown Content  */}
+      <ScrollArea className="flex-1 min-h-0 @container">
+        <div
+          className="whitespace-pre-wrap break-all  @3xl:w-[700px] @3xl:mx-auto px-9 mt-[40px] pb-[400px]"
+          contentEditable
+        >
+          {text}
+        </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
+    </div>
+  );
 };
 
 export default Editor;

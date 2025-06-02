@@ -118,6 +118,7 @@
     @apply bg-background text-foreground;
   }
 
+  // No Scrollbar
   .scrollbar-hidden {
     -ms-overflow-style: none; /* Internet Explorer 10+ */
     scrollbar-width: none; /* Firefox */

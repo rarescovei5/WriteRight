@@ -21,7 +21,7 @@ pub fn run() {
             tauri::generate_handler![
                 // File System
                 filesystem::get_folder_hierarchy,
-                filesystem::create_file,
+                filesystem::read_file,
                 filesystem::delete_file,
                 filesystem::create_file,
                 filesystem::save_file,

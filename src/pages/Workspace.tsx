@@ -36,7 +36,7 @@ const Workspace = () => {
     <div className="h-svh flex flex-col">
       <Titlebar />
       <div className="flex flex-row flex-1 min-h-0">
-        <aside className="border-r border-border flex flex-col h-full items-center justify-start">
+        <aside className="border-r flex flex-col h-full items-center justify-start">
           <TooltipProvider>
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
