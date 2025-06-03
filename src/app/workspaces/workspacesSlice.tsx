@@ -41,7 +41,7 @@ const initialState: WorkspaceState = {
 export const loadWorkspacesPaths = createAsyncThunk('workspaces/loadWorkspacesPaths', async () => {
   return await invoke<WorkspaceState['folders']>('load_workspaces');
 });
-export const loadWorkspace = createAsyncThunk('workspaces/workspaceLoad', async (workspacePath: string) => {
+export const loadWorkspace = createAsyncThunk('workspaces/loadWorkspace', async (workspacePath: string) => {
   const workspacesInfo: WorkspacesInfo = JSON.parse(localStorage.getItem('workspacesInfo')!) || {};
 
   if (!workspacesInfo[workspacePath]) {

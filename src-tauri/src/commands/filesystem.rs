@@ -3,6 +3,7 @@ use std::{fs, fs::{File}};
 use std::io::{Read, Write};
 use std::{path, path::Path};
 
+
 // Used for the explorer hierarchy
 #[derive(Serialize)]
 pub struct FileNode {
@@ -67,6 +68,60 @@ pub fn read_file(file_path: String) -> Result<String, String> {
     println!("[DEBUG: RUST] Successfully read {} bytes", contents.len());
     Ok(contents)
 }
+
+#[tauri::command]
+pub fn read_resc_file(file_path: String) -> Result<String, String> {
+    // Determine the application's executable directory
+    let exe_dir = std::env::current_exe()
+        .map_err(|e| e.to_string())?
+        .parent()
+        .ok_or_else(|| "Failed to get executable directory".to_string())?
+        .to_path_buf();
+
+    // Construct the full path to the resource
+    let resource_path = exe_dir.join("resources").join(file_path);
+
+    let mut file = File::open(resource_path).map_err(|e| e.to_string())?;
+    let mut contents = String::new();
+
+    file.read_to_string(&mut contents).map_err(|e| e.to_string())?;
+    println!("[DEBUG: RUST] Successfully read {} bytes", contents.len());
+    Ok(contents)
+}
+
+#[tauri::command]
+pub fn read_file_binary(file_path: String) -> Result<Vec<u8>, String> {
+    let mut file = File::open(&file_path).map_err(|e| e.to_string())?;
+    let mut contents = Vec::new();
+    file.read_to_end(&mut contents).map_err(|e| e.to_string())?;
+    println!("[DEBUG: RUST] Successfully read {} bytes", contents.len());
+    Ok(contents)
+}
+
+#[tauri::command]
+pub fn read_resc_file_binary(file_path: String) -> Result<Vec<u8>, String> {
+    // Determine the application's executable directory
+    let exe_dir = std::env::current_exe()
+        .map_err(|e| e.to_string())?
+        .parent()
+        .ok_or_else(|| "Failed to get executable directory".to_string())?
+        .to_path_buf();
+
+    // Construct the full path to the resource
+    let resource_path = exe_dir.join("resources").join(file_path);
+
+    // Attempt to read the file
+    match fs::read(&resource_path) {
+        Ok(bytes) => {
+            println!("[DEBUG: RUST] Reading {} bytes from bundled resource", bytes.len());
+            Ok(bytes)
+        }
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+
+
 
 #[tauri::command]
 pub fn save_file(file_path: String) -> Result<(), String> {

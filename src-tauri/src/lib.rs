@@ -21,11 +21,13 @@ pub fn run() {
             tauri::generate_handler![
                 // File System
                 filesystem::get_folder_hierarchy,
-                filesystem::read_file,
                 filesystem::delete_file,
                 filesystem::create_file,
                 filesystem::save_file,
-
+                filesystem::read_file,
+                filesystem::read_resc_file,
+                filesystem::read_file_binary,
+                filesystem::read_resc_file_binary,
                 // Persistance
                 persistance::save_workspaces,
                 persistance::load_workspaces])
