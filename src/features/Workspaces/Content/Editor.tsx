@@ -9,16 +9,6 @@ import { invoke } from '@tauri-apps/api/core';
 import { useEditorRegistry } from '@/hooks/useAppRegistry';
 import type { IGrammar, IToken } from 'vscode-textmate';
 
-const scopeToClass = {
-  'markup.bold.markdown': 'font-bold',
-  'markup.italic.markdown': 'italic',
-  'markup.inline.raw.markdown': 'bg-zinc-100 px-1 rounded font-mono text-sm',
-  'heading.1.markdown': 'text-3xl font-bold',
-  'heading.2.markdown': 'text-2xl font-bold',
-  'heading.3.markdown': 'text-xl font-bold',
-  'markup.list.markdown': 'list-disc ml-6',
-};
-
 const Editor = () => {
   const dispatch = useAppDispatch();
   const { selectedFilePath, openedFilesPaths } = useAppSelector((state) => state.workspaces.currentWorkspace);
@@ -31,7 +21,7 @@ const Editor = () => {
   }, [selectedFilePath]);
 
   // VSC-TEXTMATE
-  const { registry, loading: regLoading, error } = useEditorRegistry();
+  const { registry, loading: regLoading, error: regError } = useEditorRegistry();
   const grammarRef = React.useRef<IGrammar | null>(null);
   const [tokenLines, setTokenLines] = React.useState<IToken[][]>();
 
@@ -86,6 +76,23 @@ const Editor = () => {
     return (
       <div className="flex-1 flex items-center justify-center">
         <p className="text-muted-foreground">Loading editor syntax...</p>
+      </div>
+    );
+  }
+
+  if (regError) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-4">
+        <p className="text-red-500 mb-2">Failed to initialize editor syntax.</p>
+        <pre className="bg-gray-100 text-sm p-2 rounded">{String(regError)}</pre>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Retry
+        </button>
       </div>
     );
   }
