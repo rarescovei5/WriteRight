@@ -118,12 +118,72 @@
     @apply bg-background text-foreground;
   }
 
-  // No Scrollbar
+  /* No Scrollbar */
   .scrollbar-hidden {
     -ms-overflow-style: none; /* Internet Explorer 10+ */
     scrollbar-width: none; /* Firefox */
   }
   .scrollbar-hidden::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
+  }
+
+  /* CodeMirror */
+
+  /* General */
+  .CodeMirror {
+    @apply !h-full !bg-transparent !text-foreground !max-w-[700px] mx-auto !pt-10 !pb-100;
+  }
+  .CodeMirror-sizer {
+    @apply !h-full !mb-0;
+  }
+  .CodeMirror-code {
+    @apply !pr-0;
+  }
+  .CodeMirror-cursor {
+    @apply !border-foreground/90;
+  }
+  .CodeMirror-gutters {
+    @apply !bg-transparent !border-0 !p-0 !left-0;
+  }
+  .CodeMirror-gutter-wrapper {
+    @apply !-left-3 !top-1/2 !-translate-y-1/2;
+  }
+  .CodeMirror-scroll {
+    @apply !pr-0 !pb-0 !overflow-hidden;
+  }
+  .CodeMirror-vscrollbar {
+    @apply !hidden;
+  }
+
+  /* CodeBlock */
+  .HyperMD-codeblock-bg {
+    @apply !bg-accent !border-0;
+  }
+  .HyperMD-codeblock {
+    @apply !text-foreground !p-2;
+  }
+
+  /* Something that is Wrapped in '' */
+  [class='cm-inline-code'] {
+    @apply !bg-accent !text-foreground !border-0 !p-1;
+  }
+  .cm-formatting.cm-formatting-code.cm-inline-code {
+    @apply !text-primary;
+  }
+
+  /* hr  */
+  .HyperMD-hr-bg {
+    background: none;
+  }
+
+  /* Header  */
+  .HyperMD-header::after {
+    @apply !hidden;
+  }
+
+  /* Block Quote  */
+  .HyperMD-quote::before {
+    @apply !w-[1px];
+    background: var(--color-muted) !important;
   }
 }

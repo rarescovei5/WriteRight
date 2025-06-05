@@ -18,8 +18,11 @@
     "@tailwindcss/vite": "^4.1.7",
     "@tauri-apps/api": "^2.5.0",
     "@tauri-apps/plugin-dialog": "^2.2.2",
+    "@types/codemirror": "^5.60.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "codemirror": "^5.65.19",
+    "hypermd": "^0.3.11",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -27,9 +30,7 @@
     "react-resizable-panels": "^3.0.2",
     "react-router-dom": "^7.6.1",
     "tailwind-merge": "^3.3.0",
-    "tailwindcss": "^4.1.7",
-    "vscode-oniguruma": "^2.0.1",
-    "vscode-textmate": "^9.2.0"
+    "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
