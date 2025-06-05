@@ -1,31 +1,32 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks/hooks';
+import { useAppSelector } from '@/app/hooks/hooks';
 import { FileText } from 'lucide-react';
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { updateOpenedFiles } from '@/app/workspaces/workspacesSlice';
 
 import { invoke } from '@tauri-apps/api/core';
 import { useEditorRegistry } from '@/hooks/useAppRegistry';
 import type { IGrammar, IToken } from 'vscode-textmate';
+import MarkdownLive from './MarkdownLive';
 
 const Editor = () => {
-  const dispatch = useAppDispatch();
-  const { selectedFilePath, openedFilesPaths } = useAppSelector((state) => state.workspaces.currentWorkspace);
-  const [text, setText] = React.useState<string>('');
+  // Store
+  const { selectedFilePath } = useAppSelector((state) => state.workspaces.currentWorkspace);
 
-  // Load Text
+  // Initialize Reigstry for tokenizing Markdown
+  const { registry, loading: regLoading, error: regError } = useEditorRegistry();
+
+  // State & Refs
+  const [text, setText] = React.useState<string>('');
+  const [tokenLines, setTokenLines] = React.useState<IToken[][]>([]);
+  const tokenizeDebounceRef = React.useRef<NodeJS.Timeout>(null);
+  const grammarRef = React.useRef<IGrammar | null>(null);
+
+  // Effects
   React.useEffect(() => {
     if (selectedFilePath === '') return;
     invoke<string>('read_file', { filePath: selectedFilePath }).then((fileContents) => setText(fileContents));
-  }, [selectedFilePath]);
-
-  // VSC-TEXTMATE
-  const { registry, loading: regLoading, error: regError } = useEditorRegistry();
-  const grammarRef = React.useRef<IGrammar | null>(null);
-  const [tokenLines, setTokenLines] = React.useState<IToken[][]>();
-
-  // Load Grammar
+  }, [selectedFilePath]); // Load File Contents
   React.useEffect(() => {
     if (!registry || regLoading) return;
 
@@ -39,27 +40,40 @@ const Editor = () => {
     };
 
     load();
-  }, [registry, regLoading]);
-
-  // Tokenzie Lines
+  }, [registry, regLoading]); // Load Markdown Grammar for Registry
   React.useEffect(() => {
-    if (!grammarRef.current || !text) return;
+    // TODO: Optimise retokenizing only what's changed
+    if (!grammarRef.current) return;
 
-    const grammar = grammarRef.current;
-    const lines = text.split(/\r?\n/);
-    const allTokens = [];
-
-    let ruleStack = null;
-    for (const line of lines) {
-      const result = grammar.tokenizeLine(line, ruleStack);
-      allTokens.push(result.tokens);
-      ruleStack = result.ruleStack;
+    // Clear any pending timer whenever "text" changes
+    if (tokenizeDebounceRef.current) {
+      clearTimeout(tokenizeDebounceRef.current);
     }
 
-    setTokenLines(allTokens);
-    console.log(text, allTokens);
-  }, [text]);
+    // Don’t immediately bail out if text is empty; we might want to clear tokens
+    tokenizeDebounceRef.current = setTimeout(() => {
+      const grammar = grammarRef.current!;
+      const lines = text.split(/\r?\n/);
+      const allTokens: IToken[][] = [];
 
+      let ruleStack: any = null;
+      for (const line of lines) {
+        const result = grammar.tokenizeLine(line, ruleStack);
+        allTokens.push(result.tokens);
+        ruleStack = result.ruleStack;
+      }
+
+      setTokenLines(allTokens);
+    }, 1000);
+
+    return () => {
+      if (tokenizeDebounceRef.current) {
+        clearTimeout(tokenizeDebounceRef.current);
+      }
+    };
+  }, [text]); // Tokenize Contents
+
+  // Other helper UIS
   if (selectedFilePath === '') {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -70,17 +84,13 @@ const Editor = () => {
         </div>
       </div>
     );
-  }
-
-  if (regLoading) {
+  } else if (regLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <p className="text-muted-foreground">Loading editor syntax...</p>
       </div>
     );
-  }
-
-  if (regError) {
+  } else if (regError) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <p className="text-red-500 mb-2">Failed to initialize editor syntax.</p>
@@ -97,23 +107,12 @@ const Editor = () => {
     );
   }
 
+  // Editor
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      {/* Actual Markdown Content  */}
-      <ScrollArea className="flex-1 min-h-0 @container">
-        <div
-          className="whitespace-pre-wrap break-all focus:outline-none @3xl:w-[700px] @3xl:mx-auto px-9 mt-[40px] pb-[400px]"
-          contentEditable
-          suppressContentEditableWarning
-          onInput={(e) => {
-            if (!openedFilesPaths.includes(selectedFilePath))
-              dispatch(updateOpenedFiles({ updateKind: 'add', path: selectedFilePath }));
-            const target = e.currentTarget as HTMLDivElement;
-            setText(target.textContent || '');
-          }}
-        >
-          {text}
-        </div>
+      <ScrollArea className="flex-1 min-h-0">
+        <MarkdownLive text={text} onChange={setText} tokenLines={tokenLines} />
+
         <ScrollBar orientation="vertical" />
       </ScrollArea>
     </div>
