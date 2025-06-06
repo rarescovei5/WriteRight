@@ -17,7 +17,7 @@ const FileSync = ({ text, filePath }: { text: string; filePath: string }) => {
     }
 
     debounceRef.current = setTimeout(() => {
-      invoke('save_file', { filePath, newContent: text }).catch(console.error);
+      invoke('save_file_contents', { filePath, newContent: text }).catch(console.error);
     }, 200);
 
     return () => {

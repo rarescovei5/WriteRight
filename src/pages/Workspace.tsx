@@ -72,7 +72,7 @@ const Workspace = () => {
             </Tooltip>
           </TooltipProvider>
         </aside>
-        <ResizablePanelGroup className="flex-1" direction="horizontal">
+        <ResizablePanelGroup className="flex-1" direction="horizontal" autoSaveId={'Workspace-ResizeablePanelGroup'}>
           {/* Left Webview */}
           <ResizablePanel className="flex flex-col relative" defaultSize={20} maxSize={80}>
             <Outlet />

@@ -28,11 +28,10 @@ const HyperMDEditor: React.FC<HyperMDEditorProps> = ({ value, onChange }) => {
     cmInstanceRef.current = cm;
 
     return () => {
-      cm.toTextArea(); // ✅ now correctly typed
+      cm.toTextArea();
     };
   }, []);
 
-  // 🔁 Update editor when `value` changes from outside (like new file)
   useEffect(() => {
     const cm = cmInstanceRef.current;
     if (!cm) return;

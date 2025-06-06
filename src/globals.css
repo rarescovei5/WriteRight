@@ -131,7 +131,7 @@
 
   /* General */
   .CodeMirror {
-    @apply !h-full !bg-transparent !text-foreground px-2 !max-w-[700px] mx-auto !pt-10 !pb-100;
+    @apply !h-full !bg-transparent !text-foreground px-2 !max-w-[700px] w-full mx-auto !pt-10;
   }
   .CodeMirror-sizer {
     @apply !h-full !mb-0;
@@ -144,10 +144,6 @@
   }
   .CodeMirror-gutters {
     @apply !bg-transparent !border-0 !p-0 !left-0;
-  }
-
-  .CodeMirror-scroll {
-    @apply !pr-0 !pb-0 !overflow-hidden;
   }
   .CodeMirror-vscrollbar {
     @apply !hidden;
@@ -223,5 +219,11 @@
   .HyperMD-quote::before {
     @apply !w-[1px];
     background: var(--color-muted) !important;
+  }
+
+  /* CheckBox  */
+  .cm-s-hypermd-light span.cm-formatting-task {
+    @apply !text-foreground/80;
+    background-image: none !important;
   }
 }

@@ -37,6 +37,92 @@ const initialState: WorkspaceState = {
   },
 };
 
+// Helper functions
+function hInsertNode(treeNode: WorkspaceTree, parentPath: string, newNode: WorkspaceTree): boolean {
+  // If this node’s path matches parentPath, push newNode into its children
+  if (treeNode.path === parentPath && treeNode.is_dir) {
+    treeNode.children.push(newNode);
+    return true;
+  }
+
+  // Otherwise, descend into each child
+  if (!Array.isArray(treeNode.children)) {
+    return false;
+  }
+  for (let child of treeNode.children) {
+    const inserted = hInsertNode(child, parentPath, newNode);
+    if (inserted) return true;
+  }
+
+  return false;
+}
+function hDeleteNode(treeNode: WorkspaceTree, targetPath: string): boolean {
+  if (!Array.isArray(treeNode.children)) {
+    return false;
+  }
+
+  // First, try to remove child(s) at this level
+  const idx = treeNode.children.findIndex((child) => child.path === targetPath);
+  if (idx !== -1) {
+    // Found: remove exactly that one child, then return true
+    treeNode.children.splice(idx, 1);
+    return true;
+  }
+
+  // Otherwise, recurse into children
+  for (let child of treeNode.children) {
+    const deleted = hDeleteNode(child, targetPath);
+    if (deleted) return true;
+  }
+
+  return false;
+}
+function hRenameNode(treeNode: WorkspaceTree, oldPath: string, newName: string): boolean {
+  if (treeNode.path === oldPath) {
+    // We found the node to rename. Compute its parent folder by stripping off "/oldName"
+    const parentPath = treeNode.path.substring(0, treeNode.path.lastIndexOf('/') + 1);
+    // E.g. "/Users/me/project/src/components/"
+    const newFullPath = parentPath + newName;
+
+    // Keep track of old prefix so we can fix children paths
+    const oldPrefix = treeNode.path + (treeNode.is_dir ? '/' : '');
+
+    // Update this node's own name & path. For a folder, we do not add a trailing slash on `path`.
+    treeNode.name = newName;
+    treeNode.path = newFullPath;
+
+    // Now update every descendant's `path` to replace oldPrefix with newFullPath + "/"
+    const fixDescendantPaths = (node: WorkspaceTree) => {
+      if (!Array.isArray(node.children)) {
+        return false;
+      }
+      for (let child of node.children) {
+        // If oldPrefix ends with '/', ensure we replace consistently
+        if (child.path.startsWith(oldPrefix)) {
+          const suffix = child.path.substring(oldPrefix.length);
+          const newChildPath = newFullPath + (treeNode.is_dir ? '/' : '') + suffix;
+          child.path = newChildPath;
+        }
+        // Recurse
+        fixDescendantPaths(child);
+      }
+    };
+    fixDescendantPaths(treeNode);
+    return true;
+  }
+
+  // Descend into children
+  if (!Array.isArray(treeNode.children)) {
+    return false;
+  }
+  for (let child of treeNode.children) {
+    const renamed = hRenameNode(child, oldPath, newName);
+    if (renamed) return true;
+  }
+
+  return false;
+}
+
 // async thunks
 export const loadWorkspacesPaths = createAsyncThunk('workspaces/loadWorkspacesPaths', async () => {
   return await invoke<WorkspaceState['folders']>('load_workspaces');
@@ -138,6 +224,30 @@ const workspaceSlice = createSlice({
 
       state.currentWorkspace.loaded = false;
     },
+
+    addNode(state, action: PayloadAction<{ parentPath: string; name: string; is_dir: boolean }>) {
+      const { parentPath, name, is_dir } = action.payload;
+      // Build the full path for the new node
+      const newPath = parentPath.endsWith('/') ? parentPath + name : parentPath + '/' + name;
+
+      const newNode: WorkspaceTree = {
+        name,
+        path: newPath,
+        is_dir,
+        children: [],
+      };
+
+      // Insert it into the in-memory workspaceTree
+      hInsertNode(state.currentWorkspace.workspaceTree, parentPath, newNode);
+    },
+    removeNode(state, action: PayloadAction<{ targetPath: string }>) {
+      const { targetPath } = action.payload;
+      hDeleteNode(state.currentWorkspace.workspaceTree, targetPath);
+    },
+    renameNode(state, action: PayloadAction<{ oldPath: string; newName: string }>) {
+      const { oldPath, newName } = action.payload;
+      hRenameNode(state.currentWorkspace.workspaceTree, oldPath, newName);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadWorkspacesPaths.fulfilled, (state, action) => {
@@ -166,5 +276,9 @@ export const {
   updateOpenedFiles, // Add / Remove from opened file tabs
   openFile, // The current displayed file in the editor
   prepareWorkspaceClose, // Save things for UX
+
+  addNode,
+  removeNode,
+  renameNode,
 } = workspaceSlice.actions;
 export default workspaceSlice.reducer;

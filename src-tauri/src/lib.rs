@@ -20,17 +20,26 @@ pub fn run() {
         .invoke_handler(
             tauri::generate_handler![
                 // File System
-                filesystem::get_folder_hierarchy,
-                filesystem::delete_file,
-                filesystem::create_file,
-                filesystem::save_file,
-                filesystem::read_file,
-                filesystem::read_resc_file,
-                filesystem::read_file_binary,
-                filesystem::read_resc_file_binary,
+                    filesystem::get_folder_hierarchy,
+                    // Delete
+                    filesystem::delete_file,
+                    filesystem::delete_directory,
+                    // Create
+                    filesystem::create_file,
+                    filesystem::create_directory,
+                    // Changes
+                    filesystem::save_file_contents,
+                    filesystem::rename_folder,
+                    filesystem::rename_file,
+                    // Reading
+                    filesystem::read_file,
+                    filesystem::read_resc_file,
+                    filesystem::read_file_binary,
+                    filesystem::read_resc_file_binary,
+
                 // Persistance
-                persistance::save_workspaces,
-                persistance::load_workspaces])
+                    persistance::save_workspaces,
+                    persistance::load_workspaces])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
