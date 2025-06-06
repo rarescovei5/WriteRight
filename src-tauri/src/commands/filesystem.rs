@@ -124,9 +124,9 @@ pub fn read_resc_file_binary(file_path: String) -> Result<Vec<u8>, String> {
 
 
 #[tauri::command]
-pub fn save_file(file_path: String) -> Result<(), String> {
+pub fn save_file(file_path: String, new_content: String) -> Result<(), String> {
     let mut file = File::create(&file_path).map_err(|e| e.to_string())?;
-    file.write_all(b"").map_err(|e| e.to_string())?;
+    file.write_all(new_content.as_bytes()).map_err(|e| e.to_string())?;
     println!("[DEBUG: RUST] \"{}\" saved successfully", file_path);
     Ok(())
 }

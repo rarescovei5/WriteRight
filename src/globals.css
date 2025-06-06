@@ -131,7 +131,7 @@
 
   /* General */
   .CodeMirror {
-    @apply !h-full !bg-transparent !text-foreground !max-w-[700px] mx-auto !pt-10 !pb-100;
+    @apply !h-full !bg-transparent !text-foreground px-2 !max-w-[700px] mx-auto !pt-10 !pb-100;
   }
   .CodeMirror-sizer {
     @apply !h-full !mb-0;
@@ -145,14 +145,43 @@
   .CodeMirror-gutters {
     @apply !bg-transparent !border-0 !p-0 !left-0;
   }
-  .CodeMirror-gutter-wrapper {
-    @apply !-left-3 !top-1/2 !-translate-y-1/2;
-  }
+
   .CodeMirror-scroll {
     @apply !pr-0 !pb-0 !overflow-hidden;
   }
   .CodeMirror-vscrollbar {
     @apply !hidden;
+  }
+
+  /* Fold */
+  .CodeMirror-gutter-wrapper {
+    @apply !-left-3 !top-1/2;
+  }
+  .CodeMirror-gutter-elt {
+    @apply !-translate-y-1/2;
+  }
+  .CodeMirror-foldgutter-open {
+    @apply !text-foreground/50;
+  }
+  .CodeMirror-foldgutter-open {
+    @apply !text-foreground/75;
+  }
+  .CodeMirror-foldgutter-folded {
+    @apply !text-foreground/75;
+  }
+  .CodeMirror-widget .CodeMirror-foldmarker {
+    color: transparent !important; /* hides the ↔ */
+    text-shadow: none !important;
+    position: relative;
+    margin-left: 4px;
+  }
+
+  .CodeMirror-widget .CodeMirror-foldmarker::after {
+    @apply !text-foreground/50;
+    content: '...';
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   /* CodeBlock */
@@ -182,6 +211,15 @@
   }
 
   /* Block Quote  */
+  .HyperMD-quote {
+    @apply !pl-2;
+  }
+  .HyperMD-quote :not(.cm-formatting) {
+    @apply !text-foreground/80;
+  }
+  .HyperMD-quote .cm-formatting {
+    @apply !ml-0;
+  }
   .HyperMD-quote::before {
     @apply !w-[1px];
     background: var(--color-muted) !important;

@@ -6,6 +6,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 import { invoke } from '@tauri-apps/api/core';
 import HyperMDEditor from './HyperMdEditor';
+import FileSync from '@/features/Sync/FileSync';
 
 const Editor = () => {
   // Store
@@ -40,6 +41,7 @@ const Editor = () => {
         <HyperMDEditor value={text} onChange={setText} />
         <ScrollBar orientation="vertical" />
       </ScrollArea>
+      <FileSync text={text} filePath={selectedFilePath} />
     </div>
   );
 };
