@@ -1,151 +1,50 @@
-# ✍️ WriteRight – Visual Markdown Editor for Lesson Organization
+# ✍️ WriteRight – Lightweight Markdown Lesson Organizer
 
-**WriteRight** is a dedicated markdown editor designed to help educators, course creators, and students craft, organize, and visualize lesson content in one unified workspace. Combine structured note-taking with freehand sketching to build dynamic, interconnected lesson plans.
-
----
-
-## 🚀 Features
-
-### 📝 Powerful Markdown Editor
-
-- Full support for headings, bullet/numbered lists, tables, code blocks, blockquotes
-- Inline LaTeX for mathematical formulas
-- Embed images, audio, video, and other file types
-- Live preview alongside editing pane
-
-### 🔗 Bi-directional Linking & Outline
-
-- Link any note or sub-section to build a network of concepts
-- Auto-generated outline panel for quick navigation
-- Backlink panel shows all references to the current note
-
-### 🎨 Integrated Whiteboard Canvas
-
-- Freehand drawing, shapes, and flowcharts
-- Text annotations with markdown styling
-- Group, move, resize, and layer objects
-- Export diagrams as SVG/PNG for reuse
-
-### 🌐 Graph & Map View
-
-- Visualize how lessons, topics, and resources interconnect
-- Interactive nodes and edges—click to jump to specific notes
-- Filter by tag, date, or custom categories
-
-### 📚 Lesson Templates & Snippets
-
-- Prebuilt lesson-plan templates (e.g., lecture, lab, homework)
-- Snippet library for reusable content (definitions, examples)
-- Customizable boilerplate with variables and placeholders
-
-### 🔍 Smart Search & Tagging
-
-- Full-text search across all notes and diagrams
-- Tag system for categorizing lessons by subject, grade, or unit
-- Saved searches and filters for recurring queries
-
-### 🔒 Local-first & Sync-ready
-
-- All data stored locally (files on disk) for privacy
-- Optional sync via cloud storage (Dropbox, Google Drive, OneDrive)
-- Conflict resolution tools for collaborative editing
-
-### ⚙️ Extensible Plugin API
-
-- Develop or install plugins to add new export formats, integrations, or UI tweaks
-- JavaScript/TypeScript-based plugin framework
-- Community plugin marketplace
+**WriteRight** is a local-first desktop application for creating and organizing markdown-based lesson content. It’s designed for speed, simplicity, and structured note-taking in a familiar folder/file interface.
 
 ---
 
-## 💻 Installation
+## ✅ What It Does
 
-1. **Download** the latest installer for your OS from the [releases page].
-2. **Run the installer** and follow on-screen instructions.
-3. **Launch** WriteRight and create your first lesson vault!
+- **📁 Visual File & Folder Explorer**
+  Browse, create, rename, and delete markdown files and folders in a workspace tree, directly reflecting the structure on your disk.
 
-> **Note:** On first launch, choose or create a “vault” folder where all your notes and diagrams will be stored.
+- **📝 Minimal Markdown Editor**
+  Edit any text files with live updates. Supports core markdown syntax including:
 
----
+  - Headings, lists, bold/italic
+  - Code blocks
+  - Links and inline images
 
-## 🏁 Quick Start
+- **🧭 Sidebar Navigation**
+  Quickly switch between files, organize folders, and manage workspace structure visually.
 
-1. **Create a new note** by clicking the “+” icon or pressing `Ctrl+N` / `Cmd+N`.
-2. **Name** your note and start typing in the markdown editor.
-3. **Draw** on the canvas by clicking the canvas tab or pressing `Ctrl+E`.
-4. **Link** notes by typing `[[Note Name]]`.
-5. **View Graph** via the side-panel—explore connections and jump between topics.
-6. **Tag** notes with `#tagname` for filtering and grouping.
-
----
-
-## 📂 Project Structure
-
-```text
-/vault
-  /Daily Notes
-    2025-05-28.md
-  /Lessons
-    Introduction to Algebra.md
-    Quadratic Equations.md
-  /Diagrams
-    Algebra Graphs.draw
-  write-config.json
-```
-
-- `*.md` – Markdown notes
-- `*.draw` – Canvas files in JSON format
-- `write-config.json` – Vault configuration (settings, sync info, plugin list)
+- **🌙 Local-First, No Account Required**
+  All your notes are stored as plain text markdown files in a folder of your choosing—no databases, no cloud, no lock-in.
 
 ---
 
-## 🛠️ Configuration & Settings
+## 🧰 Tech Stack
 
-Access **Settings** from the gear icon in the bottom-left corner:
+- **Frontend**: React + TypeScript + Tailwind CSS
 
-- **Editor**: Themes, font size, line spacing
-- **Canvas**: Stroke width, grid snapping, background color
-- **Sync**: Connect or disconnect cloud service
-- **Plugins**: Browse, install, update, and configure plugins
+- **Desktop Runtime**: [Tauri](https://tauri.app)
 
----
+  - Lightweight, fast, and secure native desktop shell
+  - Bridges the frontend with system-level file APIs via Rust
 
-## ⚡ Keyboard Shortcuts
+- **State Management**: Redux Toolkit
 
-| Action           | Windows / Linux | macOS         |
-| ---------------- | --------------- | ------------- |
-| New Note         | `Ctrl+N`        | `Cmd+N`       |
-| Toggle Preview   | `Ctrl+P`        | `Cmd+P`       |
-| Open Graph View  | `Ctrl+G`        | `Cmd+G`       |
-| Open Canvas      | `Ctrl+E`        | `Cmd+E`       |
-| Search All Notes | `Ctrl+Shift+F`  | `Cmd+Shift+F` |
-| Create Link      | `[[`            | `[[`          |
-| Toggle Sidebar   | `Ctrl+B`        | `Cmd+B`       |
+- **Routing**: React Router
+
+- **Icons/UI**: Lucide + shadcn/ui + Radix UI
 
 ---
 
-## 📣 Contributing
+## ⚙️ How It Works
 
-We welcome contributions! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/YourFeature`)
-3. Commit your changes (`git commit -m "Add YourFeature"`)
-4. Push to your branch (`git push origin feature/YourFeature`)
-5. Open a pull request
-
-Refer to the \[CONTRIBUTING.md] for coding standards and process details.
-
----
-
-## 📝 License
-
-WriteRight is released under the **MIT License**. See the \[LICENSE] file for full terms.
-
----
-
-## 📬 Support & Community
-
-- **Issue Tracker**: Report bugs or request features
-- **Discussions**: Join community Q\&A and share tips
-- **Chat**: Real-time support and collaboration on our Discord server
+1. When you launch WriteRight, you select a folders (your “vaults”).
+2. The selected folder is scanned and shown as a sidebar tree of markdown files and subfolders.
+3. Clicking on a file opens it in the main editor pane.
+4. You can right-click items to rename, delete, or create new files/folders.
+5. All edits are saved directly to disk—nothing is stored elsewhere.
