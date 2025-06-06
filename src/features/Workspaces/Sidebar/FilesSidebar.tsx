@@ -18,10 +18,15 @@ const FilesSidebar = () => {
     if (!newName || !newName.trim()) return;
     const parentPath = workspacePath!;
     try {
+      console.log(`root: ${workspacePath}`, `target: ${parentPath + '\\' + newName}`);
       if (isDir) {
-        await invoke('create_directory', { path: parentPath + '/' + newName });
+        await invoke('create_directory', {
+          workspaceRoot: workspacePath,
+          folderPath: parentPath,
+          newFolderName: parentPath + '\\' + newName,
+        });
       } else {
-        await invoke('create_file', { folderPath: parentPath, fileName: newName });
+        await invoke('create_file', { workspaceRoot: workspacePath, folderPath: parentPath, fileName: newName });
       }
       // Dispatch into Redux so the tree updates immediately:
       dispatch(

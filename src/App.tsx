@@ -8,10 +8,6 @@ import Workspace from './pages/Workspace';
 import { useAppDispatch } from './app/hooks/hooks';
 import { loadWorkspacesPaths } from './app/workspaces/workspacesSlice';
 
-import ExtensionsSidebar from '@/features/Workspaces/Sidebar/ExtensionsSidebar';
-import FilesSidebar from '@/features/Workspaces/Sidebar/FilesSidebar';
-import SearchSidebar from '@/features/Workspaces/Sidebar/SearchSidebar';
-
 function App() {
   const dispatch = useAppDispatch();
 
@@ -23,11 +19,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/workspaces/:workspacePath" element={<Workspace />}>
-          <Route path="files" element={<FilesSidebar />} />
-          <Route path="search" element={<SearchSidebar />} />
-          <Route path="extensions" element={<ExtensionsSidebar />} />
-        </Route>
+        <Route path="/workspaces/:workspacePath" element={<Workspace />} />
       </Routes>
     </BrowserRouter>
   );

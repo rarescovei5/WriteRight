@@ -71,7 +71,7 @@ const Home = () => {
               <div key={idx} className="flex flex-col text-left">
                 <h3 className="font-medium mb-2">{getFolderName(folder)}</h3>
                 <div className="flex-1 flex relative group">
-                  <Link to={`/workspaces/${encodeURIComponent(folder)}/files`} className="flex-1">
+                  <Link to={`/workspaces/${encodeURIComponent(folder)}`} className="flex-1">
                     <div className="bg-foreground h-full rounded-xs hover:opacity-95 transition-[scale_opacity]"></div>
                   </Link>
                   <Button

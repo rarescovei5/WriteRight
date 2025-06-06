@@ -19,6 +19,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
 } from '../ui/context-menu';
+import { useParams } from 'react-router-dom';
 
 interface FolderHierarchyProps {
   tree: WorkspaceTree[];
@@ -46,6 +47,7 @@ interface TreeNodeProps {
 }
 
 const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
+  const { workspacePath: workspaceRoot } = useParams();
   const [open, setOpen] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(item.name);
@@ -82,9 +84,9 @@ const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
 
     try {
       if (item.is_dir) {
-        await invoke('rename_folder', { oldPath, newName });
+        await invoke('rename_folder', { workspaceRoot, oldPath, newName });
       } else {
-        await invoke('rename_file', { oldPath, newName });
+        await invoke('rename_file', { workspaceRoot, oldPath, newName });
       }
 
       dispatch(renameNode({ oldPath, newName }));
@@ -116,7 +118,7 @@ const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
         const val = inputRef.current.value;
         inputRef.current.setSelectionRange(val.length, val.length);
       }
-    }, 0);
+    }, 100);
   }, [isEditing]);
 
   const deleteNodeHandler = async () => {
@@ -127,9 +129,9 @@ const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
 
     try {
       if (item.is_dir) {
-        await invoke('delete_directory', { folderPath: item.path });
+        await invoke('delete_directory', { workspaceRoot, folderPath: item.path });
       } else {
-        await invoke('delete_file', { filePath: item.path });
+        await invoke('delete_file', { workspaceRoot, filePath: item.path });
       }
       // Now remove it from the in-memory tree
       dispatch(removeNode({ targetPath: item.path }));
@@ -146,9 +148,13 @@ const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
     const parentPath = item.path;
     try {
       if (isDir) {
-        await invoke('create_directory', { path: parentPath + '/' + newName });
+        await invoke('create_directory', {
+          workspaceRoot,
+          folderPath: parentPath,
+          newFolderName: parentPath + '/' + newName,
+        });
       } else {
-        await invoke('create_file', { folderPath: parentPath, fileName: newName });
+        await invoke('create_file', { workspaceRoot, folderPath: parentPath, fileName: newName });
       }
 
       dispatch(
@@ -198,7 +204,13 @@ const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
 
         <ContextMenuContent>
           <ContextMenuLabel>Folder Actions</ContextMenuLabel>
-          <ContextMenuItem onSelect={startRename}>Rename</ContextMenuItem>
+          <ContextMenuItem
+            onSelect={() => {
+              setTimeout(() => startRename(), 0);
+            }}
+          >
+            Rename
+          </ContextMenuItem>
           <ContextMenuItem onSelect={deleteNodeHandler} className="text-red-600">
             Delete
           </ContextMenuItem>
@@ -251,7 +263,13 @@ const TreeNode = ({ item, level, inset, showPreviews }: TreeNodeProps) => {
 
       <ContextMenuContent>
         <ContextMenuLabel>File Actions</ContextMenuLabel>
-        <ContextMenuItem onSelect={startRename}>Rename</ContextMenuItem>
+        <ContextMenuItem
+          onSelect={() => {
+            setTimeout(() => startRename(), 0);
+          }}
+        >
+          Rename
+        </ContextMenuItem>
         <ContextMenuItem onSelect={deleteNodeHandler} className="text-red-600">
           Delete
         </ContextMenuItem>
