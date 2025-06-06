@@ -1,12 +1,10 @@
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import ContentWebview from '@/features/Workspaces/Content/ContentWebview';
 import Titlebar from '@/components/layout/Titlebar';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-import { Blocks, File, Search } from 'lucide-react';
 import React from 'react';
 import { prepareWorkspaceClose, loadWorkspace } from '@/app/workspaces/workspacesSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks/hooks';
@@ -17,12 +15,6 @@ const Workspace = () => {
   const isWorkspaceLoaded = useAppSelector((state) => state.workspaces.currentWorkspace.loaded);
 
   const { workspacePath } = useParams();
-
-  // For Sidebar Item Highlighting
-  const location = useLocation();
-  const isFiles = location.pathname.includes('/files');
-  const isSearch = location.pathname.includes('/search');
-  const isExtensions = location.pathname.includes('/extensions');
 
   React.useEffect(() => {
     if (!workspacePath) return;
